@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .sidebar {
+            height: 100%;
+            width: 260px;
+            position: fixed;
+            top: 20px;
+             left: 10px; 
+            background-color: #D19C97;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #333;
+            display: block;
+        }
+        .sidebar a:hover {
+        
+             color:#fff;
+             text-decoration: underline;
+        }
+        
+        .content {
+            margin-left: 260px;
+              padding: 0px; 
+              
+             
+        }
+        .header {
+            background-color: #D19C97;
+            padding: 10px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;  
+            align-items: center;
+            width: 102%;
+             /* position: fixed;  */
+             top: 20px;
+             
+        }
+        .header h2 {
+            color:#333;
+            margin: 0;
+        }
+        .header .logout {
+            color: #333;
+            text-decoration: none;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+
+       
+        .footer {
+            background-color:#D19C97;
+            
+            text-align: left;
+            padding: 10px 0;
+             position: fixed; 
+            width: 100%;
+            bottom: 0;
+        }
+                 
+        .footer a {
+        color: #333;
+        text-decoration: none;
+        margin: 0 15px;
+    }
+    .footer a:hover {
+        text-decoration: underline;
+    }
+        
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .chart {
+            width: 45%;
+        }
+        canvas {
+            background-color: #fff;
+        }
+
+
+        h3{
+  text-align: center;
+   margin-top: 0px; 
+  color:#333;
+}
+
+form {
+  width: 100%;
+  margin: 20px auto;
+  padding: 10px;
+  /* background-color: #fff; */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+ form input{
+  width: 100%; 
+  padding: 10px;
+  margin-bottom:  10px ;
+   display :block; 
+  
+  box-sizing: border-box;
+ }
+
+ button {
+    padding: 5px ;
+  margin: 5px 0; 
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+ button:hover {
+  background-color: #28a745;
+}
+button.btn-edit {
+  background-color: #28a745;
+}
+ 
+
+table {
+  width: 100%;
+  margin: 20px auto;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f8f8f8;
+}
+
+.btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    
+    
+}
+
+.btn-primary:hover {
+    
+    background-color: #e0a800;
+}
+
+.btn-danger:hover {
+    background-color: #e0a800;
+}
+
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="./dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="./orders"><i class="fas fa-box"></i> Orders</a>
+        <a href="#"><i class="fas fa-tag"></i> Products</a>
+        <a href="./customers"><i class="fas fa-users"></i> Customers</a>
+        <a href="./categories"><i class="fas fa-list"></i> Categories</a>
+        <a href="#"><i class="fas fa-ticket-alt"></i> Coupons</a>
+        <a href="#"><i class="fas fa-chart-line"></i> Sales Report</a>
+        <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
+    </div>
+    
+    <div class="content">
+        <div class="header">
+            <h2>SHOPPER</h2>
+            <a href="./logout" class="logout">Logout</a>
+        </div>
+
+     <h3 >Product List</h3> 
+
+    <a href="./addproducts"><button>Add New Product</button></a>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Description</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Regular Price</th>
+                <th>Sales Price</th>
+                <th>Product Offer (%)</th>
+                <th>Stock</th>
+                <th>Color</th>
+                <th>Images</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% products.forEach(product => { %>
+                <tr>
+                    <td><%= product.productName %></td>
+                    <td><%= product.description %></td>
+                    <td><%= product.brand %></td>
+                    <td><%= product.category.name %></td>
+                    <td><%= product.regularPrice %></td>
+                    <td><%= product.salesPrice %></td>
+                    <td><%= product.productOffer %></td>
+                    <td><%= product.stock %></td>
+                    <td><%= product.color %></td>
+                    <td>
+                        <% if (product.ProductImage && product.ProductImage.length > 0) { %>
+                            <img src="<%= product.ProductImage[0].url %>" alt="ProductImage" style="width: 50px; height: 50px;">
+                          <% } else { %>
+                            <span>No image available</span>
+                          <% } %>
+                        </td>
+                    <td><%= product.isBlocked ? 'Out of Stock' : 'Available' %></td>
+                    <td>
+                        <a href="/admin/products/edit/<%=product._id %>">
+                        <button  class="btn btn-primary" style="display: inline">Edit</button>
+                        </a>
+                    <form action="/admin/products/delete/<%= product._id %>?_method=DELETE" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+        
+    <!-- <footer>
+        <div class="footer">
+            <a href="#">Policies</a>
+            <a href="#">Return Policies</a>
+            <a href="#">Terms of Use</a>
+            <a href="#">Security</a>
+            <a href="#">Privacy</a>
+            <a href="#">CopyRight Policy</a>
+        </div> -->
+      
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      
+        </footer> 
+      </body>
+      </html>
+
+
+</body>
+

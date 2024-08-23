@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Dashboard</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+            .sidebar {
+                height: 100%;
+                width: 260px;
+                 position:fixed; 
+                top: 15px;
+                left: 10px;
+                background-color: #D19C97;
+                padding-top: 10px;
+            }
+            .sidebar a {
+                padding: 15px 25px;
+                text-decoration: none;
+                font-size: 18px;
+                color: #333;
+                display: block;
+            }
+            .sidebar a:hover {
+            
+                 color:#fff;
+                 text-decoration: underline;
+            }
+            
+             .content {
+                margin-left: 260px;
+                 padding: 20px; 
+            }
+            /* .header {
+                background-color: #D19C97;
+                 padding: 15px; 
+                width:102% ;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                display: flex;
+                 justify-content: space-between; 
+                align-items: center;
+                
+                
+            } */ 
+
+        
+        .header {
+            background-color: #D19C97;
+            padding: 10px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;  
+            align-items: center;
+            width: 102%;
+             /* position: fixed;  */
+             top: 20px;
+        }
+
+            .header h2 {
+                color:#333;
+                margin: 0;
+            }
+            .header .logout {
+                color: #333;
+                text-decoration: none;
+            }
+            
+             
+                        
+        h3{
+  text-align: center;
+   margin-top: 0px; 
+  color:#333;
+}
+
+            
+                   
+            
+            .card {
+                background-color: #fff;
+                padding: 20px;
+                margin: 20px 0;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .footer {
+                background-color:#D19C97;
+                
+                text-align: left;
+                padding: 10px 0;
+                  /* position:fixed;   */
+                width: 100%;
+                bottom: 0;
+            }
+                     
+            .footer a {
+            color: #333;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+            
+            .chart-container {
+                display: flex;
+                justify-content: space-between;
+            }
+            .chart {
+                width: 45%;
+            }
+            canvas {
+                background-color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+    
+        <div class="sidebar">
+            <a href="./dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="./orders"><i class="fas fa-box"></i> Orders</a>
+            <a href="#"><i class="fas fa-tag"></i> Products</a>
+            <a href="./customers"><i class="fas fa-users"></i> Customers</a>
+            <a href="./categories"><i class="fas fa-list"></i> Categories</a>
+            <a href="#"><i class="fas fa-ticket-alt"></i> Coupons</a>
+            <a href="#"><i class="fas fa-chart-line"></i> Sales Report</a>
+            <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
+        </div>
+
+        <div class="content">
+            <div class="header">
+                <h2>SHOPPER</h2>
+                <a href="./logout" class="logout">Logout</a>
+            </div>
+
+
+            <h3>User Management</h3>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% customers.forEach(customer => { %>
+      <tr>
+        <td><%= customer.name %></td>
+        <td><%= customer.email %></td>
+        <td><%= customer.phone %></td>
+        <td class="status-cell-<%= customer.id %>"><%= customer.isblocked ? 'Blocked' : 'Active' %></td>
+        <td>
+          <button class="btn btn-toggle-block"  
+                  data-id="<%= customer.id %>" 
+                  data-status="<%= customer.isblocked ? 'blocked' : 'active' %>">
+            <%= customer.isblocked ? 'Unblock' : 'Block' %>
+          </button>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+         
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.btn-toggle-block').forEach(button => {
+    button.addEventListener('click', function() {
+      const id = this.dataset.id;
+      const currentStatus = this.dataset.status;
+      const action = currentStatus === 'active' ? 'block' : 'unblock';
+
+      fetch(`/admin/customers/${id}/toggle-block`, { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any necessary headers like CSRF token
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Update button text and data attributes
+          this.textContent = data.user.isblocked ? 'Unblock' : 'Block';
+          this.dataset.status = data.user.isblocked ? 'blocked' : 'active';
+          
+          // Update status cell
+          const statusCell = document.querySelector(`.status-cell-${id}`);
+          statusCell.textContent = data.user.isblocked ? 'Blocked' : 'Active';
+          
+          // Show success message
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: data.message,
+            showConfirmButton: true,
+            timer: 5000
+          });
+        } else {
+          throw new Error(data.message || 'Action failed');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error.message || 'Something went wrong!',
+        });
+      });
+    });
+  });
+});
+</script>
+
+
+          <!-- footer -->
+
+            <!-- <div class="footer">
+            <a href="#">Policies</a>
+            <a href="#">Return Policies</a>
+            <a href="#">Terms of Use</a>
+            <a href="#">Security</a>
+            <a href="#">Privacy</a>
+            <a href="#">CopyRight Policy</a>
+        </div> 
+     -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        
+        
+    </body>
+    </html>

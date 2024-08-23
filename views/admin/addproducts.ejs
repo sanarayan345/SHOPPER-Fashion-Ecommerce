@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .sidebar {
+            height: 100%;
+            width: 260px;
+            position: fixed;
+            top: 20px;
+            left: 10px;
+            background-color: #D19C97;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #333;
+            display: block;
+        }
+        .sidebar a:hover {
+        
+             color:#fff;
+             text-decoration: underline;
+        }
+/*         
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .header {
+            background-color: #D19C97;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+             justify-content: space-between; 
+            align-items: center;
+            
+        } */
+
+
+        .content {
+            margin-left: 260px;
+              padding: 0px;  
+             
+        }
+        .header {
+            background-color: #D19C97;
+            padding: 10px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;  
+            align-items: center;
+            width: 102%;
+             /* position: fixed;  */
+            top: 20px;
+            
+        }
+
+
+
+
+        .header h2 {
+            color:#333;
+            margin: 0;
+        }
+        .header .logout {
+            color: #333;
+            text-decoration: none;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+
+       
+        .footer {
+            background-color:#D19C97;       
+            text-align: left;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+                 
+        .footer a {
+        color: #333;
+        text-decoration: none;
+        margin: 0 15px;
+    }
+    .footer a:hover {
+        text-decoration: underline;
+    }
+        
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .chart {
+            width: 45%;
+        }
+        canvas {
+            background-color: #fff;
+        }
+
+
+        h3 {
+  text-align: center;
+  margin-top: 0px;
+  color:#333;
+}
+
+form {
+  width: 100%;
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+ form input  {
+  width: 100%; 
+  padding: 10px;
+  margin-bottom:  10px ;
+   display :block; 
+  box-sizing: border-box;
+ }
+  form select{
+width:100%;
+padding: 10px;
+margin-bottom: 10px;
+display :block; 
+box-sizing: border-box;
+
+ } 
+
+ button {
+  
+  padding-top: 0px ;
+  margin: 5px 0; 
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+ button:hover {
+  background-color: #28a745;
+}
+button.btn-edit {
+  background-color: #28a745;
+}
+  button.btn-delete {
+  background-color: #28a745;
+  color: white;
+  border:none;
+
+  
+  
+}
+/* 
+table {
+  width: 100%;
+  margin: 40px ;
+  border-collapse: collapse;
+  padding-top: 50px;
+} */
+
+
+
+table {
+  width: 100%;
+  margin: 10px auto;
+  border-collapse: collapse;
+
+}
+
+
+
+
+table, th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f8f8f8;
+}
+
+.btn {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+    </style>
+</head>
+
+
+<body>
+
+
+  <div class="sidebar">
+    <a href="./dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="#"><i class="fas fa-box"></i> Orders</a>
+    <a href="./products"><i class="fas fa-tag"></i> Products</a>
+    <a href="./customers"><i class="fas fa-users"></i> Customers</a>
+    <a href="./categories"><i class="fas fa-list"></i> Categories</a>
+    <a href="#"><i class="fas fa-ticket-alt"></i> Coupons</a>
+    <a href="#"><i class="fas fa-chart-line"></i> Sales Report</a>
+    <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
+</div>
+
+<div class="content">
+    <div class="header">
+        <h2>SHOPPER</h2>
+        <a href="./logout" class="logout">Logout</a>
+    </div>
+
+
+<h3>Add Product</h3>
+
+<form id="productForm" action="./addproducts/add" method="post" enctype="multipart/form-data">
+  <div>
+      <label for="productName">Product Name:</label>
+      <input type="text" name="productName" id="productName" required>
+  </div>
+  <div>
+      <label for="description">Description:</label>
+      <textarea name="description" id="description"  style="width:100%" required></textarea>
+  </div>
+  <div>
+      <label for="brand">Brand:</label>
+      <input type="text" name="brand" id="brand" required>
+  </div>
+  <div>
+      <label  for="category"  >Category:</label>
+      <select  name="category" id="category" required>
+          <!-- Add options dynamically based on categories in the database -->
+          <% categories.forEach(category => { %>
+              <option value="<%= category._id %>"><%= category.name %></option>
+          <% }) %>
+      </select>
+  </div>
+  <div>
+      <label for="regularPrice">Regular Price:</label>
+      <input type="number" name="regularPrice" id="regularPrice" required>
+  </div>
+  <div>
+      <label for="salesPrice">Sales Price:</label>
+      <input type="number" name="salesPrice" id="salesPrice">
+  </div>
+  <div>
+      <label for="productOffer">Product Offer (%):</label>
+      <input type="number" name="productOffer" id="productOffer" value="0">
+  </div>
+  <div>
+      <label for="stock">Stock:</label>
+      <input type="number" name="stock" id="stock" required>
+  </div>
+  <div>
+      <label for="color">Color:</label>
+      <input type="text" name="color" id="color" required>
+  </div>
+  <div>
+      <label for="ProductImage">Product Images (min 3):</label>
+      <input type="file" name="ProductImage" id="ProductImage" multiple required>
+  </div>
+  <div>
+      <label for="isBlocked">Is Blocked:</label>
+      <input type="checkbox" name="isBlocked" id="isBlocked" style="width:10%">
+  </div>
+  <div>
+      <label for="status">Status:</label>
+      <input type="text" name="status" id="status">
+  </div>
+  <button type="submit">Add Product</button>
+</form>
+
+
+<!-- <footer>
+  <div class="footer">
+      <a href="#">Policies</a>
+      <a href="#">Return Policies</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Security</a>
+      <a href="#">Privacy</a>
+      <a href="#">CopyRight Policy</a>
+  </div> -->
+
+
+  <script>
+  document.getElementById('ProductImage').addEventListener('change', function() {
+      const fileInput = this;
+      const files = fileInput.files;
+      if (files.length < 3) {
+          alert('You must select at least 3 files.');
+          fileInput.value = ''; // Clear the file input
+      }
+  });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const productForm = document.getElementById('productForm');
+      
+      productForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Use Fetch API or AJAX to submit the form
+        fetch(productForm.action, {
+          method: productForm.method,
+          body: new FormData(productForm)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              title: 'Success!',
+              text: data.message,
+              icon: 'success',
+              confirmButtonText: 'OK'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // Redirect or refresh the page as needed
+                window.location.href = '/admin/products';
+              }
+            });
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: 'Something went wrong.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'An unexpected error occurred.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
+      });
+    });
+    </script>
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  </footer> 
+</body>
+</html>

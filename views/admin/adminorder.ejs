@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .sidebar {
+            height: 100%;
+            width: 260px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #D19C97;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #333;
+            display: block;
+        }
+        .sidebar a:hover {
+        
+             color:#fff;
+             text-decoration: underline;
+        }
+        
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .header {
+            background-color: #D19C97;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+             justify-content: space-between; 
+            align-items: center;
+            
+        }
+        .header h1 {
+            color:#333;
+            margin: 0;
+        }
+        .header .logout {
+            color: #333;
+            text-decoration: none;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            background-color:#D19C97;
+            
+            text-align: left;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+                 
+        .footer a {
+        color: #333;
+        text-decoration: none;
+        margin: 0 15px;
+    }
+    .footer a:hover {
+        text-decoration: underline;
+    }
+        
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .chart {
+            width: 45%;
+        }
+        canvas {
+            background-color: #fff;
+        }
+        .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #D19C97
+}
+
+.order-details {
+  border: 1px solid #ddd;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.order-header p, .order-info p, .order-info h3, .order-info p, .delivery-info p {
+  margin: 5px 0;
+}
+
+.order-info, .delivery-info {
+  margin-top: 20px;
+}
+
+.table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #D19C97;
+  color: white;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="./orders"><i class="fas fa-box"></i> Orders</a>
+        <a href="./products"><i class="fas fa-tag"></i> Products</a>
+        <a href="./customers"><i class="fas fa-users"></i> Customers</a>
+        <a href="./categories"><i class="fas fa-list"></i> Categories</a>
+        <a href="#"><i class="fas fa-ticket-alt"></i> Coupons</a>
+        <a href="#"><i class="fas fa-chart-line"></i> Sales Report</a>
+        <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
+    </div>
+
+    <div class="content">
+        <div class="header">
+            <h1>SHOPPER</h1>
+            <a href="./logout" class="logout">Logout</a>
+        </div>
+
+        <div class="container">
+            <h2>Order Details</h2>
+            <div class="order-details">
+              <div class="order-header">
+                <p><strong>Order Date:</strong> <%= order.createdOn.toDateString() %></p>
+                <p><strong>Order ID:</strong> <%= order._id %></p>
+              </div>
+            
+              <div class="order-info">
+                <div class="customer-info">
+                  <h3>Customer</h3>
+                  <p><strong>Name:</strong> <%= order.userId ? order.userId.name : 'N/A' %> </p>
+                  <p><strong>Email:</strong> <%= order.userId ? order.userId.email : 'N/A' %></p>
+                  <p><strong>Phone:</strong> <%= order.userId ? order.userId.phone : 'N/A' %></p>
+                </div>
+          
+                <div class="order-meta">
+                  <h3>Order Info</h3>
+                  <p><strong>Shipping:</strong> <%= order.shippingstatus %></p>
+                  <p><strong>Pay method:</strong> <%= order.paymentMethod %></p>
+                  <p><strong>Status:</strong> <%= order.status %></p>
+                </div>
+          
+                <div class="delivery-info">
+                  <h3>Deliver to</h3>
+                  <p><strong>City:</strong> <%= order.addressId.city %></p>
+                  <p><strong>Address:</strong> <%= order.addressId.addressLine1 + ', ' + order.addressId.addressLine2 %>,
+                    <%= order.addressId.state %></p>
+
+                  <p><strong>PIN:</strong> <%= order.addressId.zipCode %></p>
+                </div>
+              </div>
+          
+               <div class="status-update">
+                <form action="/admin/orders/<%= order._id %>/status" method="POST">
+                  <select name="status" id="statusSelect">
+                    <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                    <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                    <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                  </select>
+                  <button type="submit" class="btn btn-primary">Update Status</button>
+                </form>
+              </div>
+           
+
+           <button class="cancel-order-btn" data-order-id="<%= order._id %>">Cancel Order</button>
+
+
+
+
+              <div class="order-products">
+                <h3>Products</h3>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Unit Price</th>
+                      <th>Color</th>
+                      <th>QTY</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% order.Items.forEach(item => { %>
+                    <tr>
+                           <td>
+                        <% if (item.product && item.product.ProductImage && item.product.ProductImage.length > 0) { %>
+                            <img src="<%= item.product.ProductImage[0].url %>" alt="" style="width: 50px; height:50px"> <%= item.product.productName %></td>
+                          <% } else { %>
+                            <img src="/path/to/default/image.jpg" alt="No image available" style="width: 50px; height:50px">
+                          <% } %>
+                        
+
+                      
+                      <td>&#8377;  <%= item.price.toFixed(2) %></td>
+                      <td><%= item.product.color %></td>
+                      <td><%= item.product.size %></td>
+                      <td><%= item.quantity %></td>
+                      <td>&#8377;<%= (item.price * item.quantity).toLocaleString() %></td>
+                    </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <script>
+            document.querySelectorAll('.cancel-order-btn').forEach(button => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+        console.log('Cancel button clicked'); // Debugging line
+        const orderId = button.getAttribute('data-order-id');
+        console.log('Attempting to cancel order:', orderId);
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, cancel it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log('Confirmed'); // Debugging line
+                fetch(`/admin/cancel-order/${orderId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({}),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Debugging line
+                    Swal.fire(
+                        'Cancelled!',
+                        'The order has been cancelled.',
+                        'success'
+                    );
+                    // Optionally, refresh the page or update the UI
+                })
+                .catch(error => {
+                    Swal.fire(
+                        'Error!',
+                        'There was a problem cancelling the order.',
+                        'error'
+                    );
+                    console.error('Error:', error);
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire(
+                    'Not Cancelled',
+                    'The order is safe ',
+                    'info'
+                );
+            }
+        });
+    });
+});
+
+        </script>
+        </body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .sidebar {
+            height: 100%;
+            width: 260px;
+            position: fixed;
+            top: 20px;
+            left: 10px;
+            background-color: #D19C97;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #333;
+            display: block;
+        }
+        .sidebar a:hover {
+        
+             color:#fff;
+             text-decoration: underline;
+        }
+        
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .header {
+            background-color: #D19C97;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+             justify-content: space-between; 
+            align-items: center;
+            
+        }
+        .header h2 {
+            color:#333;
+            margin: 0;
+        }
+        .header .logout {
+            color: #333;
+            text-decoration: none;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+
+       
+        .footer {
+            background-color:#D19C97;
+            
+            text-align: left;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+                 
+        .footer a {
+        color: #333;
+        text-decoration: none;
+        margin: 0 15px;
+    }
+    .footer a:hover {
+        text-decoration: underline;
+    }
+        
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .chart {
+            width: 45%;
+        }
+        canvas {
+            background-color: #fff;
+        }
+
+
+        h3 {
+  text-align: center;
+  margin-top: 10px;
+  color:#333;
+}
+
+form {
+  width: 100%;
+  margin: 10px auto;
+  padding: 5px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+ form input{
+  width: 100%; 
+  padding: 10px;
+  margin-bottom:  10px ;
+   display :block; 
+  box-sizing: border-box;
+ }
+
+ form select{
+width:100%;
+padding: 10px;
+margin-bottom: 10px;
+display :block; 
+box-sizing: border-box;
+ }
+
+ button {
+  
+  padding: 10px ;
+  margin: 5px 0; 
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+ button:hover {
+  background-color: #28a745;
+}
+button.btn-edit {
+  background-color: #28a745;
+}
+  button.btn-delete {
+  background-color: #28a745;
+  color: white;
+  border:none; 
+  
+}
+
+table {
+  width: 100%;
+  margin: 20px auto;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f8f8f8;
+}
+
+.btn {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+    </style>
+</head>
+
+
+<body>
+
+
+  <div class="sidebar">
+    <a href="./dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="#"><i class="fas fa-box"></i> Orders</a>
+    <a href="./products"><i class="fas fa-tag"></i> Products</a>
+    <a href="./customers"><i class="fas fa-users"></i> Customers</a>
+    <a href="./categories"><i class="fas fa-list"></i> Categories</a>
+    <a href="#"><i class="fas fa-ticket-alt"></i> Coupons</a>
+    <a href="#"><i class="fas fa-chart-line"></i> Sales Report</a>
+    <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
+</div>
+
+<div class="content">
+    <div class="header">
+        <h2>SHOPPER</h2>
+        <a href="./logout" class="logout">Logout</a>
+    </div>
+
+
+    <h3>Edit Product</h3>
+    <form id="productForm" action="/admin/products/edit/<%= product._id %>" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" name="productName" value="<%= product.productName %>" required>
+        </div>
+        <div>
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" value="<%= product.description %>"  style ="width:100%;"  required></textarea>
+        </div>
+        <div>
+            <label for="brand">Brand:</label>
+            <input type="text" id="brand" name="brand" value="<%= product.brand %>" required>
+        </div>
+        <div>
+            <label for="category">Category:</label>
+            <select name="category" id="category" required>
+                <!-- Add options dynamically based on categories in the database -->
+                <% categories.forEach(category => { %>
+                    <option value="<%= category._id %>" <%= category._id.equals(product.category._id) ? 'selected' : '' %>><%= category.name %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div>
+            <label for="regularPrice">Regular Price:</label>
+            <input type="number" id="regularPrice" name="regularPrice" value="<%= product.regularPrice %>" required>
+        </div>
+        <div>
+            <label for="salesPrice">Sales Price:</label>
+            <input type="number" id="salesPrice" name="salesPrice" value="<%= product.salesPrice %>" required>
+        </div>
+        <div>
+            <label for="productOffer">Product Offer:</label>
+            <input type="text" id="productOffer" name="productOffer" value="<%= product.productOffer %>">
+        </div>
+        <div>
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="stock" value="<%= product.stock %>" required>
+        </div>
+        <div>
+            <label for="color">Color:</label>
+            <input type="text" id="color" name="color" value="<%= product.color %>" required>
+        </div>
+        <div>
+            <label for="isBlocked">Blocked:</label>
+            <input type="checkbox" id="isBlocked" name="isBlocked" value= "<%= product.isBlocked ? 'checked' : '' %>"style ="width:10px">
+        </div>
+        <div>
+            <label for="status">Status:</label>
+            <input type="text" id="status" name="status" value="<%= product.status %>" required>
+        </div>
+        <div>
+            <label for="ProductImage">Upload New Images (optional, minimum 3 if provided):</label>
+            <input type="file" id="ProductImage" name="ProductImage" accept="image/*" multiple>
+        </div>
+
+          
+                 <!-- Display existing images with delete option -->
+    <div>
+        <h4>Existing Images:</h4>
+         
+        <% if (product.ProductImage && Array.isArray(product.ProductImage) && product.ProductImage.length > 0) { %>
+        <% product.ProductImage.forEach((image, index) => { %>
+            <div id="image-<%= index %>">
+                <img src="<%= image.url %>" alt="Product Image" style="width: 50px; height: 50px;">
+                <button type="button" onclick="deleteImage('<%= product._id %>', '<%= image.public_id %>','<%= index %>')">
+                    <i class="fas fa-trash-alt"></i>    </button>
+            </div>
+        <% }) %>
+        <% } else { %>
+            <p>No images available.</p>
+        <% } %>
+    </div>
+
+        <button type="submit">Update Product</button>
+    </form>
+
+
+       
+        <!-- <script>
+        document.getElementById('ProductImage').addEventListener('change', function() {
+            const fileInput = this;
+            const files = fileInput.files;
+            if (files.length < 3) {
+                alert('You must select at least 3 files.');
+                fileInput.value = ''; // Clear the file input
+            }
+        });
+
+      </script>  -->
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const productForm = document.getElementById('productForm');
+          
+          productForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Use Fetch API to submit the form
+            fetch(productForm.action, {
+              method: productForm.method,
+              body: new FormData(productForm)
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                Swal.fire({
+                  title: 'Success!',
+                  text: data.message,
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    // Redirect to products page
+                    window.location.href = '/admin/products';
+                  }
+                });
+              } else {
+                Swal.fire({
+                  title: 'Error!',
+                  text: data.message || 'Something went wrong.',
+                  icon: 'error',
+                  confirmButtonText: 'OK'
+                });
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              Swal.fire({
+                title: 'Error!',
+                text: 'An unexpected error occurred.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
+            });
+          });
+        });
+        </script>
+
+<script>
+    function deleteImage(productId, publicId, imageIndex) {
+
+        const imageElement = document.getElementById(`image-${imageIndex}`);
+    if (!imageElement) {
+        console.error(`Image element with index ${imageIndex} not found`);
+        return;
+    }
+
+    imageElement.style.opacity = '0.5'; // Visual indication of loading state
+
+
+        fetch(`/admin/products/{productId}/images/{publicId}`, {
+            method: 'DELETE',
+        
+
+           headers: {
+           'Content-Type': 'application/json'
+         },
+        //  body: JSON.stringify({ url: imageUrl })
+     })
+
+        
+        .then(response => 
+        {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+        .then(data => {
+            if (data.success) {
+                // imageElement.remove();
+                document.getElementById(`image-${imageIndex}`).remove();
+            } else {
+                alert('Failed to delete image');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred');
+
+            imageElement.style.opacity = '1'; // Reset opacity if deletion fails
+        });
+    }
+    </script>
+       
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      
+        
+      </body>
+      </html>

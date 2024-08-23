@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .sidebar {
+            height: 100%;
+            width: 260px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #D19C97;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #333;
+            display: block;
+        }
+        .sidebar a:hover {
+        
+             color:#fff;
+             text-decoration: underline;
+        }
+        
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .header {
+            background-color: #D19C97;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+             justify-content: space-between; 
+            align-items: center;
+            
+        }
+        .header h1 {
+            color:#333;
+            margin: 0;
+        }
+        .header .logout {
+            color: #333;
+            text-decoration: none;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+      
+        
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .chart {
+            width: 45%;
+        }
+        canvas {
+            background-color: #fff;
+        }
+        .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333; 
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 10px;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.table th {
+  background-color:  #D19C97;
+  color: white;
+}
+
+.table td {
+  background-color: #f2f2f2; /* Table row background color */
+}
+
+.table tr:hover {
+  background-color: #ddd; /* Highlight on hover */
+}
+
+.btn-warning {
+  background-color: #f0ad4e;
+  border-color: #f0ad4e;
+  color: white;
+  padding: 5px 10px;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.btn-warning:hover {
+  background-color: #ec971f;
+}
+
+
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="./dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="#"><i class="fas fa-box"></i> Orders</a>
+        <a href="./products"><i class="fas fa-tag"></i> Products</a>
+        <a href="./customers"><i class="fas fa-users"></i> Customers</a>
+        <a href="./categories"><i class="fas fa-list"></i> Categories</a>
+        <a href="#"><i class="fas fa-ticket-alt"></i> Coupons</a>
+        <a href="#"><i class="fas fa-chart-line"></i> Sales Report</a>
+        <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
+    </div>
+
+    <div class="content">
+        <div class="header">
+            <h1>SHOPPER</h1>
+            <a href="./logout" class="logout">Logout</a>
+        </div>
+
+        <div class="container">
+            <h2>Order Management</h2>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Sl No.</th>
+                  <th>Order ID</th>
+                  <th>User Name</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orders.forEach((order, index) => { %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= order._id %></td>
+                  <td><%= order.userId ? order.userId.name  : 'Unknown User' %></td>
+                  <td><%= order.createdOn.toDateString() %></td>
+                  <td><%= order.status %></td>
+                  <td>&#8377;<%= order.totalprice.toLocaleString() %></td>
+                  <td><a href="/admin/orders/<%= order._id %>" class="btn btn-warning">View</a></td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </body>
+      </html>

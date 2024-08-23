@@ -1,0 +1,190 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Dashboard</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+            .sidebar {
+                height: 100%;
+                width: 260px;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background-color: #D19C97;
+                padding-top: 20px;
+            }
+            .sidebar a {
+                padding: 15px 25px;
+                text-decoration: none;
+                font-size: 18px;
+                color: #333;
+                display: block;
+            }
+            .sidebar a:hover {
+            
+                 color:#fff;
+                 text-decoration: underline;
+            }
+            
+            .content {
+                margin-left: 260px;
+                padding: 20px;
+            }
+            .header {
+                background-color: #D19C97;
+                padding: 15px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                display: flex;
+                 justify-content: space-between; 
+                align-items: center;
+                
+            }
+            .header h1 {
+                color:#333;
+                margin: 0;
+            }
+            .header .logout {
+                color: #333;
+                text-decoration: none;
+            }
+            .card {
+                background-color: #fff;
+                padding: 20px;
+                margin: 20px 0;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .footer {
+                background-color:#D19C97;
+                
+                text-align: left;
+                padding: 10px 0;
+                position: fixed;
+                width: 100%;
+                bottom: 0;
+            }
+                     
+            .footer a {
+            color: #333;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+            
+            .chart-container {
+                display: flex;
+                justify-content: space-between;
+            }
+            .chart {
+                width: 45%;
+            }
+            canvas {
+                background-color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+    
+        <div class="sidebar">
+            <a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="./orders"><i class="fas fa-box"></i> Orders</a>
+            <a href="./products"><i class="fas fa-tag"></i> Products</a>
+            <a href="./customers"><i class="fas fa-users"></i> Customers</a>
+            <a href="./categories"><i class="fas fa-list"></i> Categories</a>
+            <a href="#"><i class="fas fa-ticket-alt"></i> Coupons</a>
+            <a href="#"><i class="fas fa-chart-line"></i> Sales Report</a>
+            <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
+        </div>
+
+        <div class="content">
+            <div class="header">
+                <h1>SHOPPER</h1>
+                <a href="./logout" class="logout">Logout</a>
+            </div>
+
+
+
+
+
+
+
+            <div class="footer">
+            <a href="#">Policies</a>
+            <a href="#">Return Policies</a>
+            <a href="#">Terms of Use</a>
+            <a href="#">Security</a>
+            <a href="#">Privacy</a>
+            <a href="#">CopyRight Policy</a>
+        </div>
+    
+
+    
+        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const ctx1 = document.getElementById('usersGraph').getContext('2d');
+            const usersGraph = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Number of Users',
+                        data: [3000, 5000, 4000, 6000, 7000, 8000],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+    
+            const ctx2 = document.getElementById('productSales').getContext('2d');
+            const productSales = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Number of Units',
+                        data: [1000, 2000, 3000, 4000, 5000, 6000],
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+    </html>
+    
+
+
+
+
+
+
+
+
+
+
